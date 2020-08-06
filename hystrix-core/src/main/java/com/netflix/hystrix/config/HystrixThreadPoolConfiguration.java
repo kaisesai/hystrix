@@ -45,6 +45,7 @@ public class HystrixThreadPoolConfiguration {
         this.rollingCounterBucketSizeInMilliseconds = rollingCounterBucketSizeInMilliseconds;
     }
 
+    // 线程池属性配置
     private HystrixThreadPoolConfiguration(HystrixThreadPoolKey threadPoolKey, HystrixThreadPoolProperties threadPoolProperties) {
         this(threadPoolKey, threadPoolProperties.coreSize().get(),
                 threadPoolProperties.maximumSize().get(), threadPoolProperties.actualMaximumSize(),

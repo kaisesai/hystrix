@@ -49,9 +49,11 @@ public class CommandExecutor {
 
         switch (executionType) {
             case SYNCHRONOUS: {
+                // 同步执行
                 return castToExecutable(invokable, executionType).execute();
             }
             case ASYNCHRONOUS: {
+                // 异步执行
                 HystrixExecutable executable = castToExecutable(invokable, executionType);
                 if (metaHolder.hasFallbackMethodCommand()
                         && ExecutionType.ASYNCHRONOUS == metaHolder.getFallbackExecutionType()) {
@@ -60,6 +62,7 @@ public class CommandExecutor {
                 return executable.queue();
             }
             case OBSERVABLE: {
+                // 观察者模式执行
                 HystrixObservable observable = castToObservable(invokable);
                 return ObservableExecutionMode.EAGER == metaHolder.getObservableExecutionMode() ? observable.observe() : observable.toObservable();
             }

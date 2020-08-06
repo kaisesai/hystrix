@@ -1,12 +1,12 @@
 /**
  * Copyright 2012 Netflix, Inc.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -108,7 +108,7 @@ public abstract class HystrixThreadPoolProperties {
 
     /**
      * Core thread-pool size that gets passed to {@link ThreadPoolExecutor#setCorePoolSize(int)}
-     * 
+     *
      * @return {@code HystrixProperty<Integer>}
      */
     public HystrixProperty<Integer> coreSize() {
@@ -126,6 +126,8 @@ public abstract class HystrixThreadPoolProperties {
     }
 
     /**
+     * 获取实际最大线程数量，该方法
+     *
      * Given all of the thread pool configuration, what is the actual maximumSize applied to the thread pool
      * via {@link ThreadPoolExecutor#setMaximumPoolSize(int)}
      *
@@ -138,6 +140,7 @@ public abstract class HystrixThreadPoolProperties {
     public Integer actualMaximumSize() {
         final int coreSize = coreSize().get();
         final int maximumSize = maximumSize().get();
+        // 根据 allowMaximumSizeToDivergeFromCoreSize 属性来决定最大数量
         if (getAllowMaximumSizeToDivergeFromCoreSize().get()) {
             if (coreSize > maximumSize) {
                 return coreSize;
@@ -151,7 +154,7 @@ public abstract class HystrixThreadPoolProperties {
 
     /**
      * Keep-alive time in minutes that gets passed to {@link ThreadPoolExecutor#setKeepAliveTime(long, TimeUnit)}
-     * 
+     *
      * @return {@code HystrixProperty<Integer>}
      */
     public HystrixProperty<Integer> keepAliveTimeMinutes() {
@@ -163,7 +166,7 @@ public abstract class HystrixThreadPoolProperties {
      *
      * This should only affect the instantiation of a threadpool - it is not eliglible to change a queue size on the fly.
      * For that, use {@link #queueSizeRejectionThreshold()}.
-     * 
+     *
      * @return {@code HystrixProperty<Integer>}
      */
     public HystrixProperty<Integer> maxQueueSize() {
@@ -175,7 +178,7 @@ public abstract class HystrixThreadPoolProperties {
      * {@link BlockingQueue} can not be dynamically changed and we want to support dynamically changing the queue size that affects rejections.
      * <p>
      * This is used by {@link HystrixCommand} when queuing a thread for execution.
-     * 
+     *
      * @return {@code HystrixProperty<Integer>}
      */
     public HystrixProperty<Integer> queueSizeRejectionThreshold() {
@@ -188,7 +191,7 @@ public abstract class HystrixThreadPoolProperties {
 
     /**
      * Duration of statistical rolling window in milliseconds. This is passed into {@link HystrixRollingNumber} inside each {@link HystrixThreadPoolMetrics} instance.
-     * 
+     *
      * @return {@code HystrixProperty<Integer>}
      */
     public HystrixProperty<Integer> metricsRollingStatisticalWindowInMilliseconds() {
@@ -197,7 +200,7 @@ public abstract class HystrixThreadPoolProperties {
 
     /**
      * Number of buckets the rolling statistical window is broken into. This is passed into {@link HystrixRollingNumber} inside each {@link HystrixThreadPoolMetrics} instance.
-     * 
+     *
      * @return {@code HystrixProperty<Integer>}
      */
     public HystrixProperty<Integer> metricsRollingStatisticalWindowBuckets() {
@@ -233,7 +236,7 @@ public abstract class HystrixThreadPoolProperties {
      *           .withCoreSize(10)
      *           .withQueueSizeRejectionThreshold(10);
      * } </pre>
-     * 
+     *
      * @NotThreadSafe
      */
     public static class Setter {

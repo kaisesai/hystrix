@@ -155,6 +155,7 @@ public class HystrixCodaHaleMetricsPublisherThreadPool implements HystrixMetrics
             }
         });
 
+        // 配置监控信息
         metricRegistry.register(createMetricName("propertyValue_actualMaximumSize"), new Gauge<Number>() {
             @Override
             public Number getValue() {

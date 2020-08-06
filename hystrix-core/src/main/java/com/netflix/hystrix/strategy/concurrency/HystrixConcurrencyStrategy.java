@@ -1,12 +1,12 @@
 /**
  * Copyright 2013 Netflix, Inc.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -60,7 +60,7 @@ public abstract class HystrixConcurrencyStrategy {
      * <b>Default Implementation</b>
      * <p>
      * Implementation using standard java.util.concurrent.ThreadPoolExecutor
-     * 
+     *
      * @param threadPoolKey
      *            {@link HystrixThreadPoolKey} representing the {@link HystrixThreadPool} that this {@link ThreadPoolExecutor} will be used for.
      * @param corePoolSize
@@ -91,16 +91,22 @@ public abstract class HystrixConcurrencyStrategy {
         }
     }
 
+    // 真正的获取线程池
     public ThreadPoolExecutor getThreadPool(final HystrixThreadPoolKey threadPoolKey, HystrixThreadPoolProperties threadPoolProperties) {
         final ThreadFactory threadFactory = getThreadFactory(threadPoolKey);
-
+        // 属性
         final boolean allowMaximumSizeToDivergeFromCoreSize = threadPoolProperties.getAllowMaximumSizeToDivergeFromCoreSize().get();
+        // 核心线程数
         final int dynamicCoreSize = threadPoolProperties.coreSize().get();
+        // 空闲线程存活时间
         final int keepAliveTime = threadPoolProperties.keepAliveTimeMinutes().get();
+        // 最大队列数量
         final int maxQueueSize = threadPoolProperties.maxQueueSize().get();
         final BlockingQueue<Runnable> workQueue = getBlockingQueue(maxQueueSize);
 
+        // 是否允许最大线程数超过核心数
         if (allowMaximumSizeToDivergeFromCoreSize) {
+            // 最大线程数
             final int dynamicMaximumSize = threadPoolProperties.maximumSize().get();
             if (dynamicCoreSize > dynamicMaximumSize) {
                 logger.error("Hystrix ThreadPool configuration at startup for : " + threadPoolKey.name() + " is trying to set coreSize = " +
@@ -142,7 +148,7 @@ public abstract class HystrixConcurrencyStrategy {
      * <b>Default Implementation</b>
      * <p>
      * Implementation returns {@link SynchronousQueue} when maxQueueSize <= 0 or {@link LinkedBlockingQueue} when maxQueueSize > 0.
-     * 
+     *
      * @param maxQueueSize
      *            The max size of the queue requested via properties (or system default if no properties set).
      * @return instance of {@code BlockingQueue<Runnable>}
@@ -171,7 +177,7 @@ public abstract class HystrixConcurrencyStrategy {
      * <b>Default Implementation</b>
      * <p>
      * Pass-thru that does no wrapping.
-     * 
+     *
      * @param callable
      *            {@code Callable<T>} to be executed via a {@link ThreadPoolExecutor}
      * @return {@code Callable<T>} either as a pass-thru or wrapping the one given
@@ -189,7 +195,7 @@ public abstract class HystrixConcurrencyStrategy {
      * <p>
      * If this method is implemented it is generally necessary to also implemented {@link #wrapCallable(Callable)} in order to copy state
      * from parent to child thread.
-     * 
+     *
      * @param rv
      *            {@link HystrixRequestVariableLifecycle} with lifecycle implementations from Hystrix
      * @return {@code HystrixRequestVariable<T>}
@@ -197,5 +203,5 @@ public abstract class HystrixConcurrencyStrategy {
     public <T> HystrixRequestVariable<T> getRequestVariable(final HystrixRequestVariableLifecycle<T> rv) {
         return new HystrixLifecycleForwardingRequestVariable<T>(rv);
     }
-    
+
 }

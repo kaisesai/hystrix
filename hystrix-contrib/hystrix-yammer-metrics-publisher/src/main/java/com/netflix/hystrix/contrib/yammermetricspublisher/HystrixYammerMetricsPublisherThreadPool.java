@@ -57,7 +57,7 @@ public class HystrixYammerMetricsPublisherThreadPool implements HystrixMetricsPu
                 return key.name();
             }
         });
-        
+
         // allow monitor to know exactly at what point in time these stats are for so they can be plotted accurately
         metricsRegistry.newGauge(createMetricName("currentTime"), new Gauge<Long>() {
             @Override
@@ -149,6 +149,7 @@ public class HystrixYammerMetricsPublisherThreadPool implements HystrixMetricsPu
             }
         });
 
+        // 监视器属性
         metricsRegistry.newGauge(createMetricName("propertyValue_actualMaximumSize"), new Gauge<Number>() {
             @Override
             public Number value() {
